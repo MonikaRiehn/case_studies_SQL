@@ -161,6 +161,24 @@ ORDER BY o.customer_id;
 -- 6) Find the top 3 customers who have ordered the most distinct products
 ----------------------------------------------------------------------
 
+SELECT
+    o.customer_id,
+    c.first_name,
+    c.last_name,
+    o.order_id,
+    sum(oi.product_id * oi.quantity) AS number_of_items
+FROM orders AS o
+    JOIN order_items AS oi USING (order_id)
+    JOIN customers AS c USING (customer_id)
+GROUP BY o.order_id, c.first_name, c.last_name
+ORDER BY number_of_items DESC
+LIMIT 3;
+
+ customer_id | first_name | last_name | order_id | number_of_items 
+-------------+------------+-----------+----------+-----------------
+          13 | Sophia     | Thomas    |       16 |              63
+           7 | George     | Harris    |       10 |              52
+           8 | Ivy        | Jones     |       11 |              51
 
 
 ----------------------------------------------------------------------
