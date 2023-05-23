@@ -1,5 +1,5 @@
 ----------------------------------------------------------------------
---                     Data In Motion
+--                    Data In Motion
 --                 Free SQL Case Studies
 --            SQL Case Study 1: Tiny Shop Sales
 --   https://d-i-motion.com/lessons/customer-orders-analysis/
@@ -8,20 +8,15 @@
 
 ----------------------------------------------------------------------
 -- 1) Which product has the highest price? Only return a single row.
--- Solution: Product M at the price of 70
 ----------------------------------------------------------------------
 
--- solution 1 (quite easy but needs a limit-clause)
-SELECT product_name, max(price) AS highest_price
-FROM products
-GROUP BY product_name
-ORDER BY highest_price DESC
-LIMIT 1;
-
--- solution 2 (shorter, with where-clause)
-SELECT product_name, price AS highest_price
-FROM products
-WHERE price = (SELECT MAX(price) FROM products);
+SELECT 
+    product_name, 
+    price AS highest_price
+FROM 
+    products
+WHERE
+    price = (SELECT MAX(price) FROM products);
 
 ----------------------------------------------------------------------
  product_name | highest_price 
@@ -32,7 +27,6 @@ WHERE price = (SELECT MAX(price) FROM products);
 
 ----------------------------------------------------------------------
 -- 2) Which customer has made the most orders?
--- Solution: John Doe, Jane Smith and Bob Johnson placed two orders each.
 ----------------------------------------------------------------------
 
 WITH total_orders AS (                              -- create a table called "total_orders"
@@ -68,9 +62,32 @@ WHERE                                               -- only select the rows with
 
 ----------------------------------------------------------------------
 -- 3) What’s the total revenue per product?
--- Solution: 
 ----------------------------------------------------------------------
 
+SELECT
+    o.product_id,
+    p.price,
+    p.price * sum(o.quantity) AS total_revenue  -- sum up quantity by product_id across all orders
+FROM                                            
+    products AS p
+JOIN                                            -- inner join by product_id
+    order_items AS o USING (product_id)
+GROUP BY                                        -- group by for aggregating   
+    o.product_id, p.price                       -- grouping must match both columns id and price
+ORDER BY
+    o.product_id;                               -- order output
+    
+
+ product_id | price | total_revenue 
+------------+-------+---------------
+          1 | 10.00 |         50.00
+          2 | 15.00 |        135.00
+          3 | 20.00 |        160.00
+          4 | 25.00 |         75.00
+          5 | 30.00 |         90.00
+          6 | 35.00 |        210.00
+          7 | 40.00 |        120.00
+          8 | 45.00 |        135.00
 
 
 ----------------------------------------------------------------------
