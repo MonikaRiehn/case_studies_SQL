@@ -192,7 +192,7 @@ WITH bought AS (
         SUM(oi.quantity) AS total_bought
     FROM
         order_items AS oi
-    JOIN products AS p ON oi.product_id = p.product_id -- Add the missing ON clause here
+    JOIN products AS p USING (product_id)
     GROUP BY
         oi.product_id,
         p.product_name
