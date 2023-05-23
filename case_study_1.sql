@@ -29,7 +29,7 @@ WHERE
 -- 2) Which customer has made the most orders?
 ----------------------------------------------------------------------
 
-WITH total_orders AS (                              -- create a table called "total_orders"
+WITH total_orders AS (                              -- make subquery "total_orders"
     SELECT
         c.first_name first_name,                    -- give some nicer column names
         c.last_name last_name,
@@ -94,7 +94,7 @@ ORDER BY
 -- 4) Find the day with the highest revenue.
 ----------------------------------------------------------------------
 
-WITH revenue_by_date AS (
+WITH revenue_by_date AS (                           -- make subquery with revenues for ALL dates                              
 SELECT
     o.order_date order_date,
     p.price * sum(oi.quantity) AS revenue_per_date
@@ -106,12 +106,12 @@ JOIN
     products AS p USING (product_id)
 GROUP BY o.order_date, p.product_id, p.price
 )
-SELECT
+SELECT                                              -- from the subquery with ALL dates ...
     order_date,
     revenue_per_date
 FROM
     revenue_by_date
-WHERE revenue_per_date = (
+WHERE revenue_per_date = (                          -- ... select only those with the maximum revenue
         SELECT
             max (revenue_per_date)
         FROM
@@ -128,6 +128,33 @@ WHERE revenue_per_date = (
 -- 5) Find the first order (by date) for each customer.
 ----------------------------------------------------------------------
 
+SELECT
+    o.customer_id,
+    concat(c.first_name ||' '|| c.last_name) full_name,
+    min(o.order_date) first_order
+FROM
+    orders AS o
+JOIN
+    customers AS c USING (customer_id)
+GROUP BY o.customer_id, c.first_name, c.last_name
+ORDER BY o.customer_id;    
+
+
+ customer_id |    full_name     | first_order 
+-------------+------------------+-------------
+           1 | John Doe         | 2023-05-01
+           2 | Jane Smith       | 2023-05-02
+           3 | Bob Johnson      | 2023-05-03
+           4 | Alice Brown      | 2023-05-07
+           5 | Charlie Davis    | 2023-05-08
+           6 | Eva Fisher       | 2023-05-09
+           7 | George Harris    | 2023-05-10
+           8 | Ivy Jones        | 2023-05-11
+           9 | Kevin Miller     | 2023-05-12
+          10 | Lily Nelson      | 2023-05-13
+          11 | Oliver Patterson | 2023-05-14
+          12 | Quinn Roberts    | 2023-05-15
+          13 | Sophia Thomas    | 2023-05-16
 
 
 ----------------------------------------------------------------------
