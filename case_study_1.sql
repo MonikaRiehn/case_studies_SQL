@@ -185,6 +185,41 @@ LIMIT 3;
 -- 7) Which product has been bought the least in terms of quantity?
 ----------------------------------------------------------------------
 
+WITH bought AS (
+    SELECT
+        oi.product_id AS product_id,
+        p.product_name AS product_name,
+        SUM(oi.quantity) AS total_bought
+    FROM
+        order_items AS oi
+    JOIN products AS p ON oi.product_id = p.product_id -- Add the missing ON clause here
+    GROUP BY
+        oi.product_id,
+        p.product_name
+)
+SELECT
+    product_id,
+    product_name,
+    total_bought
+FROM
+    bought
+WHERE
+    total_bought = (
+        SELECT min(total_bought)
+        FROM bought
+    )
+ORDER BY product_id;
+
+
+ product_id | product_name | total_bought 
+------------+--------------+--------------
+          4 | Product D    |            3
+          5 | Product E    |            3
+          7 | Product G    |            3
+          8 | Product H    |            3
+          9 | Product I    |            3
+         11 | Product K    |            3
+         12 | Product L    |            3
 
 
 ----------------------------------------------------------------------
