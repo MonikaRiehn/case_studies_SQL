@@ -92,9 +92,36 @@ ORDER BY
 
 ----------------------------------------------------------------------
 -- 4) Find the day with the highest revenue.
--- Solution: 
 ----------------------------------------------------------------------
 
+WITH revenue_by_date AS (
+SELECT
+    o.order_date order_date,
+    p.price * sum(oi.quantity) AS revenue_per_date
+FROM
+    order_items AS oi
+JOIN
+    orders AS o USING (order_id)
+JOIN
+    products AS p USING (product_id)
+GROUP BY o.order_date, p.product_id, p.price
+)
+SELECT
+    order_date,
+    revenue_per_date
+FROM
+    revenue_by_date
+WHERE revenue_per_date = (
+        SELECT
+            max (revenue_per_date)
+        FROM
+            revenue_by_date
+);
+
+ order_date | revenue_per_date 
+------------+------------------
+ 2023-05-16 |           210.00
+ 2023-05-11 |           210.00
 
 
 ----------------------------------------------------------------------
