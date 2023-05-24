@@ -226,6 +226,28 @@ ORDER BY product_id;
 -- 8) What is the median order total?
 ----------------------------------------------------------------------
 
+WITH order_sums AS
+(
+    SELECT
+      oi.order_id AS order_id,
+      sum( oi.quantity * p.price ) AS order_total
+    FROM
+      order_items AS oi
+    JOIN orders AS o USING
+    ( order_id )
+    JOIN products AS p USING
+    ( product_id )
+    GROUP BY oi.order_id
+)
+SELECT
+  percentile_cont(.5 ) WITHIN GROUP( ORDER BY order_total ) AS median_order_total
+FROM
+  order_sums ;
+
+
+ median_order_total 
+--------------------
+              112.5
 
 
 ----------------------------------------------------------------------
