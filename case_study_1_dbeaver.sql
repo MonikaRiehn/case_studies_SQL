@@ -294,8 +294,8 @@ select
 	oi.order_id as order_id,
 	sum(oi.quantity * p.price) as order_total,
 	case
-		when sum(oi.quantity * p.price) <= 50 then 'Cheap'
-		when sum(oi.quantity * p.price) <= 100 then 'Affordable'
+		when sum(oi.quantity * p.price) <= 100 then 'Cheap'
+		when sum(oi.quantity * p.price) <= 300 then 'Affordable'
 		else 'Expensive'
 	end as price_category
 from
@@ -315,20 +315,20 @@ order by
  order_id | order_total | price_category 
 ----------+-------------+----------------
         1 |       35.00 | Cheap
-        2 |       75.00 | Affordable
+        2 |       75.00 | Cheap
         3 |       50.00 | Cheap
-        4 |       80.00 | Affordable
+        4 |       80.00 | Cheap
         5 |       50.00 | Cheap
-        6 |       55.00 | Affordable
-        7 |       85.00 | Affordable
-        8 |      145.00 | Expensive
-        9 |      140.00 | Expensive
-       10 |      285.00 | Expensive
-       11 |      275.00 | Expensive
-       12 |       80.00 | Affordable
-       13 |      185.00 | Expensive
-       14 |      145.00 | Expensive
-       15 |      225.00 | Expensive
+        6 |       55.00 | Cheap
+        7 |       85.00 | Cheap
+        8 |      145.00 | Affordable
+        9 |      140.00 | Affordable
+       10 |      285.00 | Affordable
+       11 |      275.00 | Affordable
+       12 |       80.00 | Cheap
+       13 |      185.00 | Affordable
+       14 |      145.00 | Affordable
+       15 |      225.00 | Affordable
        16 |      340.00 | Expensive
 
 
