@@ -155,17 +155,16 @@ SELECT
   	) AS next_start_date,
   LEAD(start_date) OVER (
   	ORDER BY start_date
-  	) - start_date AS duration
+  	) - start_date AS difference
 FROM
   projects
 ORDER BY
   start_date;
 
  
-name           |start_date|next_start_date|duration|
----------------+----------+---------------+--------+
-HR Project 1   |2023-01-01|     2023-02-01|      31|
-IT Project 1   |2023-02-01|     2023-03-01|      28|
-Sales Project 1|2023-03-01|               |        |
- 
+name           |start_date|next_start_date|difference|
+---------------+----------+---------------+----------+
+HR Project 1   |2023-01-01|     2023-02-01|        31|
+IT Project 1   |2023-02-01|     2023-03-01|        28|
+Sales Project 1|2023-03-01|               |          |
 
